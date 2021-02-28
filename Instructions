@@ -1,0 +1,146 @@
+In this project, you will develop algorithms that find road routes through the bridges to travel between islands.
+
+The input is a text file containing data about the given map.  Each file begins with the number of rows and columns in
+the map considered as maximum latitudes and maximum longitudes respectively on the map. The character "X" in the file
+represents the water that means if a cell contains "X" then the traveler is not allowed to occupy that cell as this car
+is not drivable on water. The character "0" in the file represents the road connected island. That means if a cell
+ contains "0" then the traveler is allowed to occupy that cell as this car can drive on roads.
+
+The traveler starts at the island located at latitude = 0 and longitude = 0 (i.e., (0,0)) in the upper left corner, and
+the goal is to drive to the island located at (MaxLattitude-1, MaxLongitudes-1) in the lower right corner.  A legal move
+from an island is to move left, right, up, or down to an immediately adjacent cell that has road connectivity which
+means a cell that contains "0".  Moving off any edge of the map is not allowed.
+
+Input: The map files
+
+Output: Print paths as explicitly specified for all the functions in Part A, Part B, and extra credit on the console.
+
+You should have single main function that calls all the required functions for Part A, Part B, and extra credit for all
+the 3 given input map files one by one.
+
+
+
+Part A
+
+Consider the following class map,
+
+class map
+{
+public:
+map(ifstream &fin);
+void print(int,int,int,int);
+bool isLegal(int i, int j);
+void setMap(int i, int j, int n);
+int getMap(int i, int j) const;
+int getReverseMapI(int n) const;
+int getReverseMapJ(int n) const;
+void mapToGraph(graph &g);
+bool findPathRecursive(graph &g, stack<int> &moves);
+bool findPathNonRecursive1(graph &g, stack<int> &moves);
+bool findPathNonRecursive2(graph &g, queue<int> &moves);
+bool findShortestPath1(graph &g, stack<int> &bestMoves);
+bool findShortestPath2(graph &, vector<int> &bestMoves);
+void map::printPath(stack<int> &s);
+int numRows(){return rows;};
+int numCols(){return cols;};
+private:
+int rows; // number of latitudes/rows in the map
+int cols; // number of longitudes/columns in the map
+matrix<bool> value;
+matrix<int> mapping; // Mapping from latitude and longitude co-ordinates (i,j) values to node index values
+vector<int> reverseMapI; // Mapping from node index values to map latitude i value
+vector<int> reverseMapJ; // Mapping from node index values to map longitude j value
+};
+
+1. Using the above class map, write function void map::mapToGraph(graph &g){...} to create a graph g that represents the
+ legal moves in the map m. Each vertex should represent a cell, and each edge should represent a legal move between
+ adjacent cells.
+
+2. Write a recursive function findPathRecursive(graph &g, stack<int> &moves) that looks for a path from the start island
+to the destination island. If a path from the start to the destination exists, your function should call the
+map::printPath() function that should print a sequence of correct moves (Go left, Go right, Go down, Go up, etc.).
+If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists
+the solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
+prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show the
+progress. Hint: consider recursive-DFS.
+
+3. Write a function findPathNonRecursive1(graph &g, stack<int> &moves) that does the same thing as in 2, but by using
+stack and without using recursion. If a path from the start to the destination exists, your function should call the
+map::printPath() function that should print a sequence of correct moves (Go left, Go right, Go down, Go up, etc.).
+If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists
+the solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
+prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show the
+progress. Hint: consider stack-based DFS.
+
+4. Write a function findPathNonRecursive2(graph &g, queue<int> &moves) that does the same thing as in 2, but by using
+queue and without using recursion. If a path from the start to the destination exists, your function should call the
+map::printPath() function that should print a sequence of correct moves (Go left, Go right, Go down, Go up, etc.).
+If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists the
+solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
+prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show
+the progress. Hint: consider queue-based BFS.
+
+The code you submit should apply all three findPath functions to each map, one after the other.
+
+The map input files named map1.txt, map2.txt, and map3.txt can be downloaded from the canvas. Example of a map input file:
+
+7
+10
+Start - 0XXXXXXXXX
+           00000000XX
+           0X0X0X0XXX
+           0X0X0X0000
+           XX0XXX0XXX
+           X0000000XX
+           XXXXXXX000Z - Destination
+
+
+
+Part B
+
+The shortest path on a map is a path from the start to the destination with the smallest number of intermediate islands,
+that is the path with the least number of intermediate "0".
+
+1. Write two functions findShortestPath1(graph &g, stack<int> &bestMoves) and findShortestPath2(graph &g, stack<int>
+ &bestMoves) that each finds the shortest path on a map if a path from the start to the destination exists. The first
+ algorithm should use Dijkstra algorithm and the second algorithm should use Bellman-Ford algorithm to find the shortest
+ paths. In each case, if a solution exists the solver should call the map::printPath() function that should print a
+ sequence of correct moves (Go left, Go right, Go down, Go up, etc.).  If no path from the start to the destination
+ exists, the program should print, "No path exists". If a solution exists the solver should also simulate the solution
+ to each map by calling the map::print() function. The map::print() function prints out a map visualization, with the
+ goal and current position of the car in the map at each move, marked to show the progress. Each function should return
+ true if any paths are found, and false otherwise.
+
+Note: The use of the additional functions of class map is optional but highly recommended.
+
+Extra Credit
+
+1. Optimize Bellman-Ford algorithm to reduce the number of iterations and compare the runtime of the unmodified and
+modified algorithm for three given input maps. Your optimized Bellman-Ford algorithm should call map::print() function.
+It should also print the runtime of the unoptimized and optimized versions.
+
+
+
+Thus, You should submit a single zip folder within which you need to have 4 files including, 1) a single ".cpp" code
+file that includes all the above-required functions called from a single main function, 2) a single ".h" header file,
+3) README file with the compile and execution instructions, and 4) your pre-compiled ".exe" executable file. On top of
+your .cpp code file, .h header file, and README file, you need to mention your name as comments. You may have an
+additional PDF file if you want to narrate your additional observations about running the functions of this project,
+e.g., drawing the graph to compare the runtime and explain the results. All submitted code files must be named as
+"<your-name>.cpp". For example, it will be "jankibhimani.cpp", "jankibhimani_graph.h", and "jankibhimani.exe". The zip
+folder containing all the files should be named as "<your-name>_code.zip". For example, it will be
+"jankibhimani_code.zip". Please follow the “Guidelines for Software Engineering Techniques.pdf” and “Assignments and
+Project Style and Documentation Guidelines.pdf” made available to you in your Student Resources module for other document
+editing and code format guidelines.
+
+Some header files you may need are following, that can be found in you header files zip folder available to you to
+download on Canvas.
+
+#include <iostream>
+#include <limits.h>
+#include "d_except.h"
+#include <list>
+#include <fstream>
+#include "d_matrix.h"
+#include <queue>
+#include <vector>
