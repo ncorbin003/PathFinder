@@ -27,7 +27,7 @@ Consider the following class map,
 class map
 {
 public:
-map(ifstream &fin);
+map(ifstream &fin); [USED]
 void print(int,int,int,int);
 bool isLegal(int i, int j);
 void setMap(int i, int j, int n);
