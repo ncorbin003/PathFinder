@@ -29,13 +29,13 @@ class map
 public:
 map(ifstream &fin); [USED]
 void print(int,int,int,int);
-bool isLegal(int i, int j);
+bool isLegal(int i, int j); [USED]
 void setMap(int i, int j, int n);
 int getMap(int i, int j) const;
 int getReverseMapI(int n) const;
 int getReverseMapJ(int n) const;
-void mapToGraph(graph &g);
-bool findPathRecursive(graph &g, stack<int> &moves);
+void mapToGraph(graph &g); [USED]
+
 bool findPathNonRecursive1(graph &g, stack<int> &moves);
 bool findPathNonRecursive2(graph &g, queue<int> &moves);
 bool findShortestPath1(graph &g, stack<int> &bestMoves);
