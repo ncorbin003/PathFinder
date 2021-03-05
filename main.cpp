@@ -125,6 +125,7 @@ public:
     void printPath(stack<int> &s) {
         int size = s.size();
         int path[size];
+        char directions[size][15];
         int i = 0;
         while (!s.empty()) {
             path[i] = s.top();
@@ -146,24 +147,55 @@ public:
             int jConvertSecondMove = secondMove%cols;
             //std::cout << "col second move: " << jConvertSecondMove << " ";
 
+            print(iConvertFirstMove, jConvertFirstMove, rows, cols);
+            //std::cout << "\n";
+
             if (iConvertSecondMove - iConvertFirstMove == 0) {
                 if(jConvertSecondMove - jConvertFirstMove == 1) {
-                    std::cout << "Go Right, ";
+                    strcpy(directions[j], "Go Right, ");
                 }
                 else if(jConvertSecondMove-jConvertFirstMove == -1) {
-                    std::cout <<"Go Left, ";
+                    strcpy(directions[j], "Go Left, ");
                 }
             }
             else if(iConvertSecondMove - iConvertFirstMove == 1) {
-                std::cout << "Go Down, ";
+                strcpy(directions[j], "Go Down, ");
             }
             else {
-                std::cout << "Go Up, ";
+                strcpy(directions[j], "Go Up, ");
             }
             //std::cout << "\n";
         }
-
+        for (int i = size-1; i > 0; i--) {
+            std::cout << directions[i];
+        }
         std::cout << "Done! \n";
+    }
+
+    void print(int rowCar, int colCar, int row, int col) {
+        carPath = matrix<char> (rows, cols, 0);
+        for (int i = 0; i < row; i++) {
+            for(int j = 0; j < col; j++) {
+                if (rowCar == i && colCar == j) {
+                    carPath[i][j] = '+';
+                }
+                else if (myMatrix[i][j] == 'X'){
+                    carPath[i][j] = 'X';
+                }
+                else if (myMatrix[i][j] == 'O') {
+                    carPath[i][j] = ' ';
+                }
+            }
+        }
+
+        for(int i = 0; i < row; i++) {
+            for(int j = 0; j < col; j++) {
+                std::cout << carPath[i][j];
+            }
+            std::cout << "\n";
+        }
+        std::cout << "\n";
+
     }
 
     void setUnseen(Graph *g) {
@@ -181,6 +213,7 @@ public:
         int graphSize = rows * cols;
         int vertex = moves.top();
         if (vertex == graphSize-1) {
+            printPath(moves);
             return true;
         }
         g.seen[vertex] = true;
@@ -206,6 +239,7 @@ public:
             }
 
         if (moves.empty()) {
+            std::cout << "No path exists.\n";
             return false;
         }
 
@@ -236,6 +270,7 @@ private:
     bool* seen;
     matrix<bool> visited;
     matrix<char> myMatrix;
+    matrix<char> carPath;
     matrix<int> mapping; // Mapping from latitude and longitude co-ordinates (i,j) values to node index values
     vector<int> reverseMapI; // Mapping from node index values to map latitude i value
     vector<int> reverseMapJ; // Mapping from node index values to map longitude j value
@@ -277,7 +312,7 @@ int main()
 
     if (myMap.findPathRecursive(g, seenSpots)) {
         std::cout << "FOUND IT!";
-        myMap.printPath(seenSpots);
+        //myMap.printPath(seenSpots);
         /*while (!seenSpots.empty()) {
             std::cout << seenSpots.top() << " ";
             seenSpots.pop();

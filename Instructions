@@ -54,7 +54,7 @@ vector<int> reverseMapJ; // Mapping from node index values to map longitude j va
 
 1. Using the above class map, write function void map::mapToGraph(graph &g){...} to create a graph g that represents the
  legal moves in the map m. Each vertex should represent a cell, and each edge should represent a legal move between
- adjacent cells.
+ adjacent cells. [DONE]
 
 2. Write a recursive function findPathRecursive(graph &g, stack<int> &moves) that looks for a path from the start island
 to the destination island. If a path from the start to the destination exists, your function should call the
