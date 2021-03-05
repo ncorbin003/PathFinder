@@ -123,15 +123,47 @@ public:
     }
 
     void printPath(stack<int> &s) {
-        int first = s.top();
-        int second = 0;
+        int size = s.size();
+        int path[size];
+        int i = 0;
         while (!s.empty()) {
-            std::cout << s.top() << " ";
+            path[i] = s.top();
             s.pop();
-            second = s.top();
-
+            i++;
         }
-        std::cout << "\n";
+
+        for (int j = size-1; j > 0; j--) {
+            int firstMove = path[j];
+            //std::cout << "first move: " << path[j] << " ";
+            int secondMove = path[j-1];
+            //std::cout << "second move: " << path[j] << " ";
+            int iConvertFirstMove = firstMove/cols;
+            //std::cout << "row first move: " << iConvertFirstMove << " ";
+            int jConvertFirstMove = firstMove%cols;
+            //std::cout << "col first move: " << jConvertFirstMove << " ";
+            int iConvertSecondMove = secondMove/cols;
+            //std::cout << "row second move: " << iConvertSecondMove << " ";
+            int jConvertSecondMove = secondMove%cols;
+            //std::cout << "col second move: " << jConvertSecondMove << " ";
+
+            if (iConvertSecondMove - iConvertFirstMove == 0) {
+                if(jConvertSecondMove - jConvertFirstMove == 1) {
+                    std::cout << "Go Right, ";
+                }
+                else if(jConvertSecondMove-jConvertFirstMove == -1) {
+                    std::cout <<"Go Left, ";
+                }
+            }
+            else if(iConvertSecondMove - iConvertFirstMove == 1) {
+                std::cout << "Go Down, ";
+            }
+            else {
+                std::cout << "Go Up, ";
+            }
+            //std::cout << "\n";
+        }
+
+        std::cout << "Done! \n";
     }
 
     void setUnseen(Graph *g) {
@@ -245,11 +277,12 @@ int main()
 
     if (myMap.findPathRecursive(g, seenSpots)) {
         std::cout << "FOUND IT!";
-        while (!seenSpots.empty()) {
+        myMap.printPath(seenSpots);
+        /*while (!seenSpots.empty()) {
             std::cout << seenSpots.top() << " ";
             seenSpots.pop();
         }
-        std::cout << "\n";//print the stack
+        std::cout << "\n";//print the stack*/
     }
     else {
         std::cout << "FAILED";
