@@ -52,6 +52,10 @@ public:
         std::cout << "\n";
     };
 
+    int numRows(){return rows;}
+
+    int numCols(){return cols;}
+
     bool isLegal(int i, int j) {
         if (i < 0 || i >= rows) {
             return false;
@@ -147,7 +151,13 @@ public:
             int jConvertSecondMove = secondMove%cols;
             //std::cout << "col second move: " << jConvertSecondMove << " ";
 
-            print(iConvertFirstMove, jConvertFirstMove, rows, cols);
+            if (j == 1) {
+                print(iConvertFirstMove, jConvertFirstMove, rows, cols);
+                print(iConvertSecondMove, jConvertSecondMove, rows, cols);
+            }
+            else {
+                print(iConvertFirstMove, jConvertFirstMove, rows, cols);
+            }
             //std::cout << "\n";
 
             if (iConvertSecondMove - iConvertFirstMove == 0) {
@@ -207,9 +217,6 @@ public:
     }
 
     bool findPathRecursive(Graph &g, stack<int> &moves) {
-
-        //bool seen[rows*cols];
-
         int graphSize = rows * cols;
         int vertex = moves.top();
         if (vertex == graphSize-1) {
@@ -243,11 +250,99 @@ public:
             return false;
         }
 
-
-            //find i and j from vertex for checking
-
     }
 
+    bool findPathNonRecursive1(Graph &g, stack<int> &moves) {
+        int graphSize = rows * cols;
+        setUnseen(&g);
+        moves.push(0);
+        int vertex = moves.top();
+
+        g.seen[vertex] = true;
+
+        while(!moves.empty()) {
+            vertex = moves.top();
+            if (vertex == graphSize-1) {
+                printPath(moves);
+                return true;
+            }
+            if (g.adjacencyMatrix[vertex][vertex + 1] == 1 && g.seen[vertex+1] == false) {
+                g.seen[vertex+1] = true;
+                moves.push(vertex+1);
+            }
+            else if (g.adjacencyMatrix[vertex][vertex - 1] == 1 && g.seen[vertex-1] == false) {
+                g.seen[vertex-1] = true;
+                moves.push(vertex-1);
+            }
+            else if (g.adjacencyMatrix[vertex][vertex + cols] == 1 && g.seen[vertex + cols] == false) {
+                g.seen[vertex + cols] = true;
+                moves.push(vertex + cols);
+            }
+            else if (g.adjacencyMatrix[vertex][vertex - cols] == 1 && g.seen[vertex - cols] == false) {
+                g.seen[vertex-cols] = true;
+                moves.push(vertex - cols);
+            }
+            else {
+                moves.pop();
+            }
+        }
+        std::cout << "No path exists.\n";
+        return false;
+    }
+    bool findPathNonRecursive2(Graph &g, queue<int> &moves) {
+        int vertex;
+        int graphSize = cols * rows;
+        int* parents = new int[graphSize];
+        std::stack<int> printQueue;
+        vector<int> reverseParents;
+        setUnseen(&g);
+        vector<int> bfsPath;
+        moves.push(0);
+        g.seen[0] = true;
+
+        for (int i = 0; i < graphSize; i++) {
+            parents[i] = -1;
+        }
+
+        while (!moves.empty()) {
+
+            vertex = moves.front();
+            //std::cout << "vertex: " << vertex << " ";
+            if (vertex == graphSize-1) {
+                int index = graphSize-1;
+                int child;
+
+                reverseParents.push_back(graphSize-1);
+
+                while (parents[index] != 0) {
+                    child = parents[index];
+                    reverseParents.push_back(parents[index]);
+                    std::cout << "child: " << index << "parent: " << parents[index] << "\n";
+                    index = child;
+                }
+
+                reverseParents.push_back(parents[index]);
+
+                for (int i = reverseParents.size()-1; i >= 0; i--) {
+                    printQueue.push(reverseParents[i]);
+                }
+
+                printPath(printQueue);
+                return true;
+            }
+            for (int i = vertex - cols; i < (vertex + cols + 1); i++) {
+                if (g.adjacencyMatrix[vertex][i] == 1 && g.seen[i] == false) {
+                        parents[i] = vertex;
+                        moves.push(i);
+                        g.seen[i] = true;
+                }
+            }
+            moves.pop();
+
+        }
+        std::cout << "No path exists.\n";
+        return false;
+    }
     /*DFS(Graph G, Vertex Vs) {
 Mark all vertices as unvisited
         Initialize stack and push source vertex (Vs) into stack
@@ -265,10 +360,10 @@ pop v from the stack;
 }*/
 
 private:
-    int rows; // number of latitudes/rows in the map
-    int cols; // number of longitudes/columns in the map
+    int rows = 0; // number of latitudes/rows in the map
+    int cols = 0; // number of longitudes/columns in the map
     bool* seen;
-    matrix<bool> visited;
+    matrix<int> parentChild;
     matrix<char> myMatrix;
     matrix<char> carPath;
     matrix<int> mapping; // Mapping from latitude and longitude co-ordinates (i,j) values to node index values
@@ -284,6 +379,7 @@ int main()
     Map myMap;
     Map::Graph g;
     std::stack<int> seenSpots;
+    std::queue<int> visited;
 
 
     std::cout << "Enter the text file you would like to read from:\n";
@@ -304,25 +400,30 @@ int main()
     //create the graph from the map
     myMap.mapToGraph(&g);
 
-    //find a recursive path using stack
+    //find a recursive path using stack First push 0 onto the stack & set the map to unseen
     seenSpots.push(0);
-
-
     myMap.setUnseen(&g);
 
     if (myMap.findPathRecursive(g, seenSpots)) {
-        std::cout << "FOUND IT!";
-        //myMap.printPath(seenSpots);
-        /*while (!seenSpots.empty()) {
-            std::cout << seenSpots.top() << " ";
-            seenSpots.pop();
-        }
-        std::cout << "\n";//print the stack*/
+        std::cout << "FOUND IT!\n";
     }
     else {
-        std::cout << "FAILED";
+        std::cout << "FAILED\n";
     }
 
+    if (myMap.findPathNonRecursive1(g, seenSpots)) {
+        std::cout << "FOUND IT!\n";
+    }
+    else {
+        std::cout << "FAILED\n";
+    }
+
+    if (myMap.findPathNonRecursive2(g, visited)) {
+        std::cout << "FOUND IT!\n";
+    }
+    else {
+        std::cout << "FAILED\n";
+    }
     return 0;
 }
 

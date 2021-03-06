@@ -62,7 +62,7 @@ map::printPath() function that should print a sequence of correct moves (Go left
 If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists
 the solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
 prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show the
-progress. Hint: consider recursive-DFS.
+progress. Hint: consider recursive-DFS. [DONE]
 
 3. Write a function findPathNonRecursive1(graph &g, stack<int> &moves) that does the same thing as in 2, but by using
 stack and without using recursion. If a path from the start to the destination exists, your function should call the
@@ -70,7 +70,7 @@ map::printPath() function that should print a sequence of correct moves (Go left
 If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists
 the solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
 prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show the
-progress. Hint: consider stack-based DFS.
+progress. Hint: consider stack-based DFS. [Done]
 
 4. Write a function findPathNonRecursive2(graph &g, queue<int> &moves) that does the same thing as in 2, but by using
 queue and without using recursion. If a path from the start to the destination exists, your function should call the
@@ -78,7 +78,7 @@ map::printPath() function that should print a sequence of correct moves (Go left
 If no path from the start to the destination exists, the program should print, "No path exists". If a solution exists the
 solver should also simulate the solution to each map by calling the map::print() function. The map::print() function
 prints out a map visualization, with the goal and current position of the car in the map at each move, marked to show
-the progress. Hint: consider queue-based BFS.
+the progress. Hint: consider queue-based BFS. [DONE]
 
 The code you submit should apply all three findPath functions to each map, one after the other.
 
