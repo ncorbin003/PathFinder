@@ -12,8 +12,7 @@
 //#include "d_graph.h"
 
 
-class Map
-{
+class Map {
 public:
     Map() {
         myMatrix;
@@ -34,17 +33,17 @@ public:
             }
         }
 
-        myMatrix = matrix<char> (rows, cols, 0);
+        myMatrix = matrix<char>(rows, cols, 0);
 
         for (int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+            for (int j = 0; j < cols; j++) {
                 fin >> spaceIndicator;
                 myMatrix[i][j] = spaceIndicator;
             }
         }
 
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 std::cout << myMatrix[i][j];
             }
             std::cout << "\n";
@@ -52,28 +51,25 @@ public:
         std::cout << "\n";
     };
 
-    int numRows(){return rows;}
+    int numRows() { return rows; }
 
-    int numCols(){return cols;}
+    int numCols() { return cols; }
 
     bool isLegal(int i, int j) {
         if (i < 0 || i >= rows) {
             return false;
-        }
-        else if (j < 0 || j >= cols){
+        } else if (j < 0 || j >= cols) {
             return false;
-        }
-        else if (myMatrix[i][j] == 'O') {
+        } else if (myMatrix[i][j] == 'O') {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     struct Graph {
         matrix<int> adjacencyMatrix;
-        bool* seen;
+        bool *seen;
     };
 
 
@@ -82,39 +78,47 @@ public:
         int graphSize = cols * rows;
         //adjacency matrix ex 70x70
 
-        g->adjacencyMatrix = matrix<int> (graphSize, graphSize, 0);
+        g->adjacencyMatrix = matrix<int>(graphSize, graphSize, 0);
         //initialize the boolean array
 
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 //std::cout << i << " " << j << " \n";
                 if (myMatrix[i][j] == 'O') {
-                    if (isLegal(i+1, j)) {
+                    if (isLegal(i + 1, j)) {
                         //std::cout << i*10+j << " " << ((i+1)*10)+j << " \n";
-                        g->adjacencyMatrix[i*cols+j][((i+1)*cols)+j] = 1;
+                        g->adjacencyMatrix[i * cols + j][((i + 1) * cols) +
+                                                         j] = 1;
                         //std::cout << ((i+1)*10)+j << " " << i*10+j << " \n";
-                        g->adjacencyMatrix[((i+1)*cols)+j][i*cols+j] = 1;
+                        g->adjacencyMatrix[((i + 1) * cols) + j][i * cols +
+                                                                 j] = 1;
 
                     }
-                    if (isLegal(i, j+1)) {
+                    if (isLegal(i, j + 1)) {
                         //std::cout << i*10+j << " " << (i*10)+j+1 << " \n";
-                        g->adjacencyMatrix[i*cols+j][(i*cols)+j+1] = 1;
+                        g->adjacencyMatrix[i * cols + j][(i * cols) + j +
+                                                         1] = 1;
                         //std::cout << (i*10)+j+1 << " " << i*10+j << " \n";
-                        g->adjacencyMatrix[(i*cols)+j+1][i*cols+j] = 1;
+                        g->adjacencyMatrix[(i * cols) + j + 1][i * cols +
+                                                               j] = 1;
 
                     }
-                    if (isLegal(i-1, j)) {
+                    if (isLegal(i - 1, j)) {
                         //std::cout << i*10+j << " " << ((i-1)*10)+j << " \n";
-                        g->adjacencyMatrix[i*cols+j][((i-1)*cols)+j] = 1;
+                        g->adjacencyMatrix[i * cols + j][((i - 1) * cols) +
+                                                         j] = 1;
                         //std::cout << ((i-1)*10)+j << " " << i*10+j << " \n";
-                        g->adjacencyMatrix[((i-1)*cols)+j][i*cols+j] = 1;
+                        g->adjacencyMatrix[((i - 1) * cols) + j][i * cols +
+                                                                 j] = 1;
 
                     }
-                    if (isLegal(i, j-1)) {
+                    if (isLegal(i, j - 1)) {
                         //std::cout << i*10+j << " " << (i*10)+j-1 << " \n";
-                        g->adjacencyMatrix[i*cols+j][(i*cols)+j-1] = 1;
+                        g->adjacencyMatrix[i * cols + j][(i * cols) + j -
+                                                         1] = 1;
                         //std::cout << (i*10)+j-1 << " " << i*10+j << " \n";
-                        g->adjacencyMatrix[(i*cols)+j-1][i*cols+j] = 1;
+                        g->adjacencyMatrix[(i * cols) + j - 1][i * cols +
+                                                               j] = 1;
                     }
                 }
 
@@ -122,7 +126,7 @@ public:
         }
         //print the adjacency matrix
 
-       //1 is true 0 is false
+        //1 is true 0 is false
 
     }
 
@@ -137,69 +141,63 @@ public:
             i++;
         }
 
-        for (int j = size-1; j > 0; j--) {
+        for (int j = size - 1; j > 0; j--) {
             int firstMove = path[j];
             //std::cout << "first move: " << path[j] << " ";
-            int secondMove = path[j-1];
+            int secondMove = path[j - 1];
             //std::cout << "second move: " << path[j] << " ";
-            int iConvertFirstMove = firstMove/cols;
+            int iConvertFirstMove = firstMove / cols;
             //std::cout << "row first move: " << iConvertFirstMove << " ";
-            int jConvertFirstMove = firstMove%cols;
+            int jConvertFirstMove = firstMove % cols;
             //std::cout << "col first move: " << jConvertFirstMove << " ";
-            int iConvertSecondMove = secondMove/cols;
+            int iConvertSecondMove = secondMove / cols;
             //std::cout << "row second move: " << iConvertSecondMove << " ";
-            int jConvertSecondMove = secondMove%cols;
+            int jConvertSecondMove = secondMove % cols;
             //std::cout << "col second move: " << jConvertSecondMove << " ";
 
             if (j == 1) {
                 print(iConvertFirstMove, jConvertFirstMove, rows, cols);
                 print(iConvertSecondMove, jConvertSecondMove, rows, cols);
-            }
-            else {
+            } else {
                 print(iConvertFirstMove, jConvertFirstMove, rows, cols);
             }
             //std::cout << "\n";
 
             if (iConvertSecondMove - iConvertFirstMove == 0) {
-                if(jConvertSecondMove - jConvertFirstMove == 1) {
+                if (jConvertSecondMove - jConvertFirstMove == 1) {
                     strcpy(directions[j], "Go Right, ");
-                }
-                else if(jConvertSecondMove-jConvertFirstMove == -1) {
+                } else if (jConvertSecondMove - jConvertFirstMove == -1) {
                     strcpy(directions[j], "Go Left, ");
                 }
-            }
-            else if(iConvertSecondMove - iConvertFirstMove == 1) {
+            } else if (iConvertSecondMove - iConvertFirstMove == 1) {
                 strcpy(directions[j], "Go Down, ");
-            }
-            else {
+            } else {
                 strcpy(directions[j], "Go Up, ");
             }
             //std::cout << "\n";
         }
-        for (int i = size-1; i > 0; i--) {
+        for (int i = size - 1; i > 0; i--) {
             std::cout << directions[i];
         }
         std::cout << "Done! \n";
     }
 
     void print(int rowCar, int colCar, int row, int col) {
-        carPath = matrix<char> (rows, cols, 0);
+        carPath = matrix<char>(rows, cols, 0);
         for (int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
+            for (int j = 0; j < col; j++) {
                 if (rowCar == i && colCar == j) {
                     carPath[i][j] = '+';
-                }
-                else if (myMatrix[i][j] == 'X'){
+                } else if (myMatrix[i][j] == 'X') {
                     carPath[i][j] = 'X';
-                }
-                else if (myMatrix[i][j] == 'O') {
+                } else if (myMatrix[i][j] == 'O') {
                     carPath[i][j] = ' ';
                 }
             }
         }
 
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
                 std::cout << carPath[i][j];
             }
             std::cout << "\n";
@@ -219,36 +217,36 @@ public:
     bool findPathRecursive(Graph &g, stack<int> &moves) {
         int graphSize = rows * cols;
         int vertex = moves.top();
-        if (vertex == graphSize-1) {
+        if (vertex == graphSize - 1) {
             printPath(moves);
             return true;
         }
+        //marks the vertex as seen
         g.seen[vertex] = true;
 
-            for (int i = vertex-cols; i < (vertex + cols + 1); i++) {
-                if (g.adjacencyMatrix[vertex][i] == 1) {
-                    moves.push(i);
-                    if (g.seen[i] == false) {
-                        //std::cout << "vertex: " << vertex << "\n";
-                        //std::cout << "i: " << i << "\n";
-                        g.seen[i] = true;
-                        if (findPathRecursive(g, moves)) {
-                            return true;
-                        }
-                        else {
-                            moves.pop();
-                        }
+        for (int i = vertex - cols; i < (vertex + cols + 1); i++) {
+            if (g.adjacencyMatrix[vertex][i] == 1) {
+                //push the vertex into the stack if the vertex is adjacent
+                moves.push(i);
+                //if the vertex is unseen then mark it as true and recursively call
+                //the function, otherwise it pops off and continues with the loop
+                if (g.seen[i] == false) {
+                    g.seen[i] = true;
+                    if (findPathRecursive(g, moves)) {
+                        return true;
                     } else {
                         moves.pop();
                     }
+                } else {
+                    moves.pop();
                 }
-
             }
 
-        if (moves.empty()) {
-            std::cout << "No path exists.\n";
-            return false;
         }
+
+
+        //std::cout << "No path exists.\n";
+        return false;
 
     }
 
@@ -260,39 +258,41 @@ public:
 
         g.seen[vertex] = true;
 
-        while(!moves.empty()) {
+        while (!moves.empty()) {
             vertex = moves.top();
-            if (vertex == graphSize-1) {
+            if (vertex == graphSize - 1) {
                 printPath(moves);
                 return true;
             }
-            if (g.adjacencyMatrix[vertex][vertex + 1] == 1 && g.seen[vertex+1] == false) {
-                g.seen[vertex+1] = true;
-                moves.push(vertex+1);
-            }
-            else if (g.adjacencyMatrix[vertex][vertex - 1] == 1 && g.seen[vertex-1] == false) {
-                g.seen[vertex-1] = true;
-                moves.push(vertex-1);
-            }
-            else if (g.adjacencyMatrix[vertex][vertex + cols] == 1 && g.seen[vertex + cols] == false) {
+            if (g.adjacencyMatrix[vertex][vertex + 1] == 1 &&
+                g.seen[vertex + 1] == false) {
+                g.seen[vertex + 1] = true;
+                moves.push(vertex + 1);
+            } else if (g.adjacencyMatrix[vertex][vertex - 1] == 1 &&
+                       g.seen[vertex - 1] == false) {
+                g.seen[vertex - 1] = true;
+                moves.push(vertex - 1);
+            } else if (g.adjacencyMatrix[vertex][vertex + cols] == 1 &&
+                       g.seen[vertex + cols] == false) {
                 g.seen[vertex + cols] = true;
                 moves.push(vertex + cols);
-            }
-            else if (g.adjacencyMatrix[vertex][vertex - cols] == 1 && g.seen[vertex - cols] == false) {
-                g.seen[vertex-cols] = true;
+            } else if (g.adjacencyMatrix[vertex][vertex - cols] == 1 &&
+                       g.seen[vertex - cols] == false) {
+                g.seen[vertex - cols] = true;
                 moves.push(vertex - cols);
-            }
-            else {
+            } else {
                 moves.pop();
             }
         }
         std::cout << "No path exists.\n";
         return false;
     }
+
+    //Uses BFS to find path
     bool findPathNonRecursive2(Graph &g, queue<int> &moves) {
         int vertex;
         int graphSize = cols * rows;
-        int* parents = new int[graphSize];
+        int *parents = new int[graphSize];
         std::stack<int> printQueue;
         vector<int> reverseParents;
         setUnseen(&g);
@@ -300,6 +300,7 @@ public:
         moves.push(0);
         g.seen[0] = true;
 
+        //sets all parents to -1
         for (int i = 0; i < graphSize; i++) {
             parents[i] = -1;
         }
@@ -308,33 +309,38 @@ public:
 
             vertex = moves.front();
             //std::cout << "vertex: " << vertex << " ";
-            if (vertex == graphSize-1) {
-                int index = graphSize-1;
+            if (vertex == graphSize - 1) {
+                int index = graphSize - 1;
                 int child;
 
-                reverseParents.push_back(graphSize-1);
-
+                //takes the array of parents and children and finds the correct path
+                //and adds it to the vector
+                reverseParents.push_back(graphSize - 1);
                 while (parents[index] != 0) {
                     child = parents[index];
                     reverseParents.push_back(parents[index]);
-                    std::cout << "child: " << index << "parent: " << parents[index] << "\n";
+                    std::cout << "child: " << index << " parent: "
+                              << parents[index] << "\n";
                     index = child;
                 }
-
                 reverseParents.push_back(parents[index]);
 
-                for (int i = reverseParents.size()-1; i >= 0; i--) {
+                //adds the vector to a stack to run through the printing function
+                for (int i = reverseParents.size() - 1; i >= 0; i--) {
                     printQueue.push(reverseParents[i]);
                 }
 
                 printPath(printQueue);
                 return true;
             }
+            //goes through each adjacent vertex and if it is unseen it will add
+            //the vertex to the queue and mark it seen and continue with the loop
+            //pops the vertex from the last part of the queue for the next loop
             for (int i = vertex - cols; i < (vertex + cols + 1); i++) {
                 if (g.adjacencyMatrix[vertex][i] == 1 && g.seen[i] == false) {
-                        parents[i] = vertex;
-                        moves.push(i);
-                        g.seen[i] = true;
+                    parents[i] = vertex;
+                    moves.push(i);
+                    g.seen[i] = true;
                 }
             }
             moves.pop();
@@ -343,26 +349,201 @@ public:
         std::cout << "No path exists.\n";
         return false;
     }
-    /*DFS(Graph G, Vertex Vs) {
-Mark all vertices as unvisited
-        Initialize stack and push source vertex (Vs) into stack
-Mark Vs as visited
 
-while the stack is not empty {
-set v = top; (vertex on the top of the stack);
-if (vertex v has an unvisited adjacent vertex w) {
-mark w as visited;
-push w on the stack;
-} else {
-pop v from the stack;
-}
-}
-}*/
+    std::vector<int> myBananas(Graph g) {
+        queue<int> myQueue;
+        vector<int> bananas;
+        myQueue.push(0);
+        int myVertex = myQueue.front();
+        int i = 0;
+        bananas.push_back(0);
+        g.seen[0] = true;
+        while (!myQueue.empty()) {
+            if (g.adjacencyMatrix[myVertex][myVertex + 1] == 1 &&
+                g.seen[myVertex + 1] == false) {
+                myQueue.push(myVertex + 1);
+                g.seen[myVertex + 1] = true;
+            }
+            if (g.adjacencyMatrix[myVertex][myVertex - 1] == 1 &&
+                g.seen[myVertex + 1] == false) {
+                myQueue.push(myVertex - 1);
+                g.seen[myVertex - 1] = true;
+            }
+            if (g.adjacencyMatrix[myVertex][myVertex + cols] == 1 &&
+                g.seen[myVertex + cols] == false) {
+                myQueue.push(myVertex + cols);
+                g.seen[myVertex + cols] = true;
+            }
+            if (g.adjacencyMatrix[myVertex][myVertex - cols] == 1 &&
+                g.seen[myVertex - cols] == false) {
+                myQueue.push(myVertex - cols);
+                g.seen[myVertex - cols] = true;
+            }
+            myQueue.pop();
+            i++;
+            myVertex = myQueue.front();
+            //std::cout << myVertex;
+            bananas.push_back(myVertex);
+        }
+        return bananas;
+    }
+
+    //uses Dijkstra algorithm
+    bool findShortestPath1(Graph &g, stack<int> &bestMoves) {
+        int graphSize = rows * cols;
+        int *parents = new int[graphSize];
+        int vertex;
+        vector<int> findPath;
+        vector<int> possibleMoves;
+        int *SP = new int[graphSize];
+        std::stack<int> printStack;
+        int index = graphSize - 1;
+        int child;
+        //mark all vertices as unseen
+        setUnseen(&g);
+
+        //set SP all vertices to infinity
+        //they are all infinity except for the first one
+        SP[0] = 0;
+        for (int i = 1; i < graphSize; i++) {
+            SP[i] = std::numeric_limits<int>::max() - graphSize;
+            //std::cout << "placed in SP" << i << ": " << SP[i] << "\n";
+        }
+
+        //sets all parents to -1 so the child is the index and the parent is the value
+        for (int i = 0; i < graphSize; i++) {
+            parents[i] = -1;
+        }
+
+        //push all vertices into stack(pq?)?
+//        for (int i = graphSize-1 ; i >= 0; i--) {
+//            bestMoves.push(i);
+//        }
+
+        possibleMoves = myBananas(g);
+
+        for (int i = possibleMoves.size() - 1; i >= 0; i--) {
+            bestMoves.push(possibleMoves[i]);
+        }
+        setUnseen(&g);
+
+        while (!bestMoves.empty()) {
+            //pop vertex off the stack(pq?)
+            vertex = bestMoves.top();
+            //std::cout << "vertex: " << vertex << "\n";
+            bestMoves.pop();
+            //mark vertex as visited
+            g.seen[vertex] = true;
+
+            //for all unvisited neighbors i of vertex:
+            for (int i = vertex - cols; i < (vertex + cols + 1); i++) {
+                if (g.adjacencyMatrix[vertex][i] == 1 && g.seen[i] == false) {
+                    if (SP[i] > SP[vertex] + 1) {
+                        //std::cout << "Path of: " << i << ":  " << SP[i] << " Path of " << vertex << ": " << SP[vertex] << "\n";
+                        //std::cout << "parent: " << vertex << " child: " << i << "\n";
+                        SP[i] = SP[vertex] + 1;
+                        //std::cout << "New path of " << i << ": " << SP[i] << "\n";
+                        parents[i] = vertex;
+
+                    }
+
+                }
+            }
+        }
+        if (parents[graphSize - 1] != -1) {
+            //takes the array of parents and children and finds the correct path
+            //and adds it to the vector
+            findPath.push_back(graphSize - 1);
+            while (parents[index] != 0) {
+                child = parents[index];
+                //std::cout << "parent: " << index << " child: " << parents[index] << "\n";
+                findPath.push_back(parents[index]);
+                index = child;
+            }
+            findPath.push_back(parents[index]);
+
+            for (int i = findPath.size() - 1; i >= 0; i--) {
+                printStack.push(findPath[i]);
+            }
+
+            printPath(printStack);
+            return true;
+        } else {
+            std::cout << "No path exists.\n";
+            return false;
+        }
+
+    }
+
+    //Bellman Ford
+    bool findShortestPath2(Graph &g, vector<int> &bestMoves) {
+        int graphSize = rows * cols;
+        int *SP = new int[graphSize];
+        int *parents = new int[graphSize];
+        std::stack<int> printStack;
+        int sourceSP = 0;
+        int sourceParent = 0;
+        int index = graphSize - 1;
+        int child;
+
+        //set SP all vertices to infinity
+        //they are all infinity except for the first one
+        for (int i = 1; i < graphSize; i++) {
+            SP[i] = std::numeric_limits<int>::max();
+        }
+        SP[sourceSP] = sourceSP;
+
+        //sets all parents to -1 so the child is the index and the parent is the value
+        for (int i = 0; i < graphSize; i++) {
+            parents[i] = -1;
+        }
+        parents[sourceParent] = sourceParent;
+
+        //bestMoves = myBananas(g);
+
+        //For (i from 1 to |v| -1)
+        for (int u = 0; u < graphSize; u++) {
+            //For(u,v) in edges; for each edge (u,v) in g
+            for (int v = u - cols; v < (u + cols + 1); v++) {
+                if (g.adjacencyMatrix[u][v] == 1) {
+                    if (SP[v] > SP[u] + 1) {
+                        //std::cout << "vertex: " << u << " other vertex: " << v << "\n";
+                        SP[v] = SP[u] + 1;
+                        parents[v] = u;
+                    }
+                }
+
+            }
+        }
+
+        if (parents[graphSize - 1] != -1) {
+            //takes the array of parents and children and finds the correct path
+            //and adds it to the vector
+            bestMoves.push_back(graphSize - 1);
+            while (parents[index] != 0) {
+                child = parents[index];
+                bestMoves.push_back(parents[index]);
+                index = child;
+            }
+            bestMoves.push_back(parents[index]);
+
+            for (int i = bestMoves.size() - 1; i >= 0; i--) {
+                printStack.push(bestMoves[i]);
+            }
+
+            printPath(printStack);
+            return true;
+        } else {
+            std::cout << "No path exists.\n";
+            return false;
+        }
+
+    }
 
 private:
     int rows = 0; // number of latitudes/rows in the map
     int cols = 0; // number of longitudes/columns in the map
-    bool* seen;
+    bool *seen;
     matrix<int> parentChild;
     matrix<char> myMatrix;
     matrix<char> carPath;
@@ -371,14 +552,14 @@ private:
     vector<int> reverseMapJ; // Mapping from node index values to map longitude j value
 };
 
-int main()
-{
+int main() {
     ifstream readFile;
     std::string fileName;
     std::string input;
     Map myMap;
     Map::Graph g;
     std::stack<int> seenSpots;
+    vector<int> bellmanVector;
     std::queue<int> visited;
 
 
@@ -390,7 +571,7 @@ int main()
         std::cout << fileName + " is open\n";
 
         myMap = Map(readFile);
-            //read the first 2 numbers from the file to create matrix
+        //read the first 2 numbers from the file to create matrix
 
     } else {
         std::cout << "File not able to be opened.\n";
@@ -404,26 +585,42 @@ int main()
     seenSpots.push(0);
     myMap.setUnseen(&g);
 
-    if (myMap.findPathRecursive(g, seenSpots)) {
+    /* if (myMap.findPathRecursive(g, seenSpots)) {
+         std::cout << "FOUND IT!\n";
+     }
+     else {
+         std::cout << "FAILED\n";
+     }
+
+     if (myMap.findPathNonRecursive1(g, seenSpots)) {
+         std::cout << "FOUND IT!\n";
+     }
+     else {
+         std::cout << "FAILED\n";
+     }
+
+     if (myMap.findPathNonRecursive2(g, visited)) {
+         std::cout << "FOUND IT!\n";
+     }
+     else {
+         std::cout << "FAILED\n";
+     }*/
+
+    seenSpots.pop();
+    if (myMap.findShortestPath1(g, seenSpots)) {
         std::cout << "FOUND IT!\n";
     }
     else {
         std::cout << "FAILED\n";
     }
 
-    if (myMap.findPathNonRecursive1(g, seenSpots)) {
+    //bellmanVector.empty();
+    /*if (myMap.findShortestPath2(g, bellmanVector)) {
         std::cout << "FOUND IT!\n";
-    }
-    else {
+    } else {
         std::cout << "FAILED\n";
-    }
+    }*/
 
-    if (myMap.findPathNonRecursive2(g, visited)) {
-        std::cout << "FOUND IT!\n";
-    }
-    else {
-        std::cout << "FAILED\n";
-    }
     return 0;
 }
 
