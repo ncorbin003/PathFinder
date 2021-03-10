@@ -42,13 +42,13 @@ public:
             }
         }
 
-        for (int i = 0; i < rows; i++) {
+        /*for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 std::cout << myMatrix[i][j];
             }
             std::cout << "\n";
         }
-        std::cout << "\n";
+        std::cout << "\n";*/
     };
 
     int numRows() { return rows; }
@@ -350,22 +350,26 @@ public:
         return false;
     }
 
-    std::vector<int> myBananas(Graph g) {
+    std::vector<int> findConnected(Graph g) {
         queue<int> myQueue;
         vector<int> bananas;
+
+        setUnseen(&g);
         myQueue.push(0);
         int myVertex = myQueue.front();
         int i = 0;
         bananas.push_back(0);
         g.seen[0] = true;
+
         while (!myQueue.empty()) {
+            //Look at the
             if (g.adjacencyMatrix[myVertex][myVertex + 1] == 1 &&
                 g.seen[myVertex + 1] == false) {
                 myQueue.push(myVertex + 1);
                 g.seen[myVertex + 1] = true;
             }
             if (g.adjacencyMatrix[myVertex][myVertex - 1] == 1 &&
-                g.seen[myVertex + 1] == false) {
+                g.seen[myVertex - 1] == false) {
                 myQueue.push(myVertex - 1);
                 g.seen[myVertex - 1] = true;
             }
@@ -381,10 +385,17 @@ public:
             }
             myQueue.pop();
             i++;
-            myVertex = myQueue.front();
+            if (!myQueue.empty()) {
+                myVertex = myQueue.front();
+                bananas.push_back(myVertex);
+            }
             //std::cout << myVertex;
-            bananas.push_back(myVertex);
+
         }
+
+        /*for (int i = 0; i < bananas.size(); i++) {
+            std::cout << "banana: " << bananas[i] << "\n";
+        }*/
         return bananas;
     }
 
@@ -406,7 +417,7 @@ public:
         //they are all infinity except for the first one
         SP[0] = 0;
         for (int i = 1; i < graphSize; i++) {
-            SP[i] = std::numeric_limits<int>::max() - graphSize;
+            SP[i] = std::numeric_limits<int>::max();// - graphSize;
             //std::cout << "placed in SP" << i << ": " << SP[i] << "\n";
         }
 
@@ -420,7 +431,7 @@ public:
 //            bestMoves.push(i);
 //        }
 
-        possibleMoves = myBananas(g);
+        possibleMoves = findConnected(g);
 
         for (int i = possibleMoves.size() - 1; i >= 0; i--) {
             bestMoves.push(possibleMoves[i]);
@@ -499,11 +510,13 @@ public:
         }
         parents[sourceParent] = sourceParent;
 
-        //bestMoves = myBananas(g);
+        bestMoves = findConnected(g);
+        int u;
 
         //For (i from 1 to |v| -1)
-        for (int u = 0; u < graphSize; u++) {
+        for (int i = 0; i < bestMoves.size(); i++) {
             //For(u,v) in edges; for each edge (u,v) in g
+            u = bestMoves[i];
             for (int v = u - cols; v < (u + cols + 1); v++) {
                 if (g.adjacencyMatrix[u][v] == 1) {
                     if (SP[v] > SP[u] + 1) {
@@ -516,19 +529,20 @@ public:
             }
         }
 
+        vector<int> theVeryBestMoves;
         if (parents[graphSize - 1] != -1) {
             //takes the array of parents and children and finds the correct path
             //and adds it to the vector
-            bestMoves.push_back(graphSize - 1);
+            theVeryBestMoves.push_back(graphSize - 1);
             while (parents[index] != 0) {
                 child = parents[index];
-                bestMoves.push_back(parents[index]);
+                theVeryBestMoves.push_back(parents[index]);
                 index = child;
             }
-            bestMoves.push_back(parents[index]);
+            theVeryBestMoves.push_back(parents[index]);
 
-            for (int i = bestMoves.size() - 1; i >= 0; i--) {
-                printStack.push(bestMoves[i]);
+            for (int i = theVeryBestMoves.size() - 1; i >= 0; i--) {
+                printStack.push(theVeryBestMoves[i]);
             }
 
             printPath(printStack);
@@ -563,9 +577,10 @@ int main() {
     std::queue<int> visited;
 
 
-    std::cout << "Enter the text file you would like to read from:\n";
-    std::cin >> fileName;
-    readFile.open(fileName);
+    //std::cout << "Enter the text file you would like to read from:\n";
+    //std::cin >> fileName;
+    std::cout << "Map 1:\n";
+    readFile.open("map1.txt");
 
     if (readFile.is_open()) {
         std::cout << fileName + " is open\n";
@@ -577,7 +592,6 @@ int main() {
         std::cout << "File not able to be opened.\n";
         exit(0);
     }
-
     //create the graph from the map
     myMap.mapToGraph(&g);
 
@@ -585,41 +599,84 @@ int main() {
     seenSpots.push(0);
     myMap.setUnseen(&g);
 
-    /* if (myMap.findPathRecursive(g, seenSpots)) {
-         std::cout << "FOUND IT!\n";
-     }
-     else {
-         std::cout << "FAILED\n";
-     }
+    std::cout << "Find path recursive: \n";
+    myMap.findPathRecursive(g, seenSpots);
+    std::cout << "Find path non-recursive 1: \n";
+    myMap.findPathNonRecursive1(g, seenSpots);
+    std::cout << "Find path non-recursive 2: \n";
+    myMap.findPathNonRecursive2(g, visited);
+    std::cout << "Find shortest path 1: \n";
+    myMap.findShortestPath1(g, seenSpots);
+    std::cout << "Find shortest path 2: \n";
+    myMap.findShortestPath2(g, bellmanVector);
 
-     if (myMap.findPathNonRecursive1(g, seenSpots)) {
-         std::cout << "FOUND IT!\n";
-     }
-     else {
-         std::cout << "FAILED\n";
-     }
+    readFile.close();
 
-     if (myMap.findPathNonRecursive2(g, visited)) {
-         std::cout << "FOUND IT!\n";
-     }
-     else {
-         std::cout << "FAILED\n";
-     }*/
+    std::cout << "Map 2:\n";
+    readFile.open("map2.txt");
 
-    seenSpots.pop();
-    if (myMap.findShortestPath1(g, seenSpots)) {
-        std::cout << "FOUND IT!\n";
-    }
-    else {
-        std::cout << "FAILED\n";
-    }
+    if (readFile.is_open()) {
+        std::cout << fileName + " is open\n";
 
-    //bellmanVector.empty();
-    /*if (myMap.findShortestPath2(g, bellmanVector)) {
-        std::cout << "FOUND IT!\n";
+        myMap = Map(readFile);
+        //read the first 2 numbers from the file to create matrix
+
     } else {
-        std::cout << "FAILED\n";
-    }*/
+        std::cout << "File not able to be opened.\n";
+        exit(0);
+    }
+    //create the graph from the map
+    myMap.mapToGraph(&g);
+
+    //find a recursive path using stack First push 0 onto the stack & set the map to unseen
+    seenSpots.push(0);
+    myMap.setUnseen(&g);
+
+    std::cout << "Find path recursive: \n";
+    myMap.findPathRecursive(g, seenSpots);
+    std::cout << "Find path non-recursive 1: \n";
+    myMap.findPathNonRecursive1(g, seenSpots);
+    std::cout << "Find path non-recursive 2: \n";
+    myMap.findPathNonRecursive2(g, visited);
+    std::cout << "Find shortest path 1: \n";
+    myMap.findShortestPath1(g, seenSpots);
+    std::cout << "Find shortest path 2: \n";
+    myMap.findShortestPath2(g, bellmanVector);
+
+    readFile.close();
+
+    std::cout << "Map 3:\n";
+    readFile.open("map3.txt");
+
+    if (readFile.is_open()) {
+        std::cout << "map3.txt is open\n";
+
+        myMap = Map(readFile);
+        //read the first 2 numbers from the file to create matrix
+
+    } else {
+        std::cout << "File not able to be opened.\n";
+        exit(0);
+    }
+    //create the graph from the map
+    myMap.mapToGraph(&g);
+
+    //find a recursive path using stack First push 0 onto the stack & set the map to unseen
+    seenSpots.push(0);
+    myMap.setUnseen(&g);
+
+    std::cout << "Find path recursive: \n";
+    myMap.findPathRecursive(g, seenSpots);
+    std::cout << "Find path non-recursive 1: \n";
+    myMap.findPathNonRecursive1(g, seenSpots);
+    std::cout << "Find path non-recursive 2: \n";
+    myMap.findPathNonRecursive2(g, visited);
+    std::cout << "Find shortest path 1: \n";
+    myMap.findShortestPath1(g, seenSpots);
+    std::cout << "Find shortest path 2: \n";
+    myMap.findShortestPath2(g, bellmanVector);
+
+    readFile.close();
 
     return 0;
 }
